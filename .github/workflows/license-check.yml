@@ -37,7 +37,7 @@ jobs:
     - name: Run ScanCode
       run: |
         source venv/bin/activate
-        scancode --license --json-pp output.json .
+        scancode --license --json-pp output.json package.json package-lock.json
 
     - name: Analyze License Output
       run: |
