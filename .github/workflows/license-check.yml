@@ -36,7 +36,7 @@ jobs:
         python3 analyze_license.py
 
     - name: Upload Scan Report as Artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: license-scan-report
         path: output.json
