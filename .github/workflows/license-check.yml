@@ -1,0 +1,42 @@
+name: License Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  license-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      run: |
+        sudo apt-get update && sudo apt-get upgrade -y
+        sudo add-apt-repository ppa:deadsnakes/ppa --yes
+        sudo apt-get install python3.8 python3.8-distutils -y
+
+    - name: Download ScanCode Toolkit
+      run: |
+        wget https://github.com/nexB/scancode-toolkit/releases/download/v30.0.1/scancode-toolkit-30.0.1_py38-linux.tar.gz
+        tar -xvf scancode-toolkit-30.0.1_py38-linux.tar.gz
+
+    - name: Run ScanCode
+      run: |
+        ./scancode-toolkit-30.0.1/scancode --license --json-pp output.json .
+
+    - name: Analyze License Output
+      run: |
+        python3 analyze_license.py
+
+    - name: Upload Scan Report as Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: license-scan-report
+        path: output.json
